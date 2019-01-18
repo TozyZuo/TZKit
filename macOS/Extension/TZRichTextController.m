@@ -402,32 +402,34 @@
 
 #if 1
 
-    NSArray<NSValue *> *rects = [self.view rectsForCharacterRange:NSMakeRange(0, self.plainText.length)];
+    NSArray<NSValue *> *rects = [self.view rectsForStringRange:NSMakeRange(0, self.attributedText.length)];
 
     CGRect bounds = rects.firstObject.rectValue;
 
-    for (NSValue *value in rects)
-    {
-        bounds = CGRectUnion(bounds, value.rectValue);
+    if (rects.count > 1) {
+        for (NSValue *value in rects)
+        {
+            bounds = CGRectUnion(bounds, value.rectValue);
+        }
     }
 
-    self.optimumSize = CGSizeMake(bounds.size.width + bounds.origin.x * 2, bounds.size.height + bounds.origin.y * 2);
+    self.optimumSize = CGSizeMake(ceil(bounds.size.width + bounds.origin.x * 2), ceil(bounds.size.height + bounds.origin.y * 2));
 
     for (TZTextComponent *linkableComponent in self.linkComponents)
     {
-        linkableComponent.rects = [self.view rectsForCharacterRange:NSMakeRange(linkableComponent.position, linkableComponent.text.length)];
+        linkableComponent.rects = [self.view rectsForStringRange:NSMakeRange(linkableComponent.position, linkableComponent.text.length)];
         for (NSValue *rectValue in linkableComponent.rects) {
             CGRect rect = rectValue.rectValue;
 
+            NSDictionary *userInfo = @{@"component": linkableComponent};
 #ifdef TrackingAreaDebug
             NSView *view = [[NSView alloc] initWithFrame:rect];
             view.wantsLayer = YES;
             view.layer.backgroundColor = [NSColor.redColor colorWithAlphaComponent:.5].CGColor;
             [self.view addSubview:view];
-            NSTrackingArea *trackingArea = [[NSTrackingArea alloc] initWithRect:rect options:NSTrackingActiveAlways | NSTrackingMouseEnteredAndExited owner:self userInfo:@{@"component": linkableComponent, @"view": view}];
-#else
-            NSTrackingArea *trackingArea = [[NSTrackingArea alloc] initWithRect:rect options:NSTrackingActiveAlways | NSTrackingMouseEnteredAndExited owner:self userInfo:@{@"component": linkableComponent}];
+            userInfo = @{@"component": linkableComponent, @"view": view};
 #endif
+            NSTrackingArea *trackingArea = [[NSTrackingArea alloc] initWithRect:rect options:NSTrackingActiveAlways | NSTrackingMouseEnteredAndExited owner:self userInfo:userInfo];
             [self.view addTrackingArea:trackingArea];
             [self.trackingAreas addObject:trackingArea];
         }
@@ -489,15 +491,16 @@
                 }
 
                 [rects addObject:@(rect)];
+
+                NSDictionary *userInfo = @{@"component": linkableComponent};
 #ifdef TrackingAreaDebug
                 NSView *view = [[NSView alloc] initWithFrame:rect];
                 view.wantsLayer = YES;
                 view.layer.backgroundColor = [NSColor.redColor colorWithAlphaComponent:.5].CGColor;
                 [self.view addSubview:view];
-                NSTrackingArea *trackingArea = [[NSTrackingArea alloc] initWithRect:rect options:NSTrackingActiveAlways | NSTrackingMouseEnteredAndExited owner:self userInfo:@{@"component": linkableComponent, @"view": view}];
-#else
-                NSTrackingArea *trackingArea = [[NSTrackingArea alloc] initWithRect:rect options:NSTrackingActiveAlways | NSTrackingMouseEnteredAndExited owner:self userInfo:@{@"component": linkableComponent}];
+                userInfo = @{@"component": linkableComponent, @"view": view};
 #endif
+                NSTrackingArea *trackingArea = [[NSTrackingArea alloc] initWithRect:rect options:NSTrackingActiveAlways | NSTrackingMouseEnteredAndExited owner:self userInfo:userInfo];
                 [self.view addTrackingArea:trackingArea];
                 [self.trackingAreas addObject:trackingArea];
             }
@@ -1005,6 +1008,10 @@
 
 @end
 
+@interface NSTextView (TZRichTextControllerDeclaration)
+<NSTextFinderClient>
+@end
+
 @implementation NSTextView (TZRichTextController)
 
 - (NSAttributedString *)attributedStringValue
@@ -1033,6 +1040,75 @@
 {
     CGFloat lineFragmentPadding = self.textContainer.lineFragmentPadding;
     return NSEdgeInsetsMake(0, lineFragmentPadding, 0, lineFragmentPadding);
+}
+
+- (NSArray<NSValue *> *)rectsForStringRange:(NSRange)range
+{
+#if 0
+    return [self rectsForCharacterRange:range];
+#else
+    NSSize size = self.bounds.size;
+    NSEdgeInsets insets = self.textInsets;
+    NSSize insetsSize = NSMakeSize(size.width - insets.left - insets.right, size.height - insets.top - insets.bottom);
+
+    // Create the framesetter with the attributed string.
+    CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString((CFAttributedStringRef)self.textStorage);
+
+    CGSize suggestFrameSize = CTFramesetterSuggestFrameSizeWithConstraints(framesetter, CFRangeMake(0, self.textStorage.length), nil, CGSizeMake(insetsSize.width, CGFLOAT_MAX), NULL);
+
+    // Initialize a rectangular path.
+    CGMutablePathRef path = CGPathCreateMutable();
+    CGPathAddRect(path, NULL, NSMakeRect(0, 0, insetsSize.width, suggestFrameSize.height));
+
+    // Create the frame and draw it into the graphics context
+    //CTFrameRef
+    CTFrameRef frame = CTFramesetterCreateFrame(framesetter,CFRangeMake(0, 0), path, NULL);
+
+    NSMutableArray *rects = [[NSMutableArray alloc] init];
+
+    CGFloat y;
+    if (self.isFlipped) {
+        y = insets.top;
+    } else {
+        y = insets.bottom;
+    }
+
+    CFArrayRef frameLines = CTFrameGetLines(frame);
+    for (CFIndex i = 0; i < CFArrayGetCount(frameLines); i++)
+    {
+        CTLineRef line = (CTLineRef)CFArrayGetValueAtIndex(frameLines, i);
+        CFRange lineRange = CTLineGetStringRange(line);
+        CGFloat ascent;
+        CGFloat descent;
+        CGFloat leading;
+
+        CTLineGetTypographicBounds(line, &ascent, &descent, &leading);
+        CGPoint origin;
+        CTFrameGetLineOrigins(frame, CFRangeMake(i, 1), &origin);
+
+        if ((range.location < lineRange.location &&
+             NSMaxRange(range) > lineRange.location) ||
+            (range.location >= lineRange.location &&
+             range.location < lineRange.location + lineRange.length))
+        {
+            CGFloat left = CTLineGetOffsetForStringIndex(CFArrayGetValueAtIndex(frameLines, i), range.location, NULL);
+            CGFloat right = CTLineGetOffsetForStringIndex(CFArrayGetValueAtIndex(frameLines,i), NSMaxRange(range), NULL);
+
+            [rects addObject:@(NSMakeRect(insets.left + origin.x + left, y, right - left, ascent + descent))];
+        }
+
+        y = y + ascent + descent + leading + self.lineSpacing;
+        y = ceil(y);
+    }
+
+    //    self.visibleRange = CTFrameGetVisibleStringRange(frame);
+
+    CFRelease(framesetter);
+    CFRelease(path);
+    CFRelease(frame);
+
+    return rects;
+#endif
 }
 
 @end

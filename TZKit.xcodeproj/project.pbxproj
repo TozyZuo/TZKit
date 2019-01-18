@@ -36,7 +36,6 @@
 		BA73302621DF607D00CE1725 /* TZVector.h in Headers */ = {isa = PBXBuildFile; fileRef = BA73302321DF607D00CE1725 /* TZVector.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		BA73302721DF607D00CE1725 /* TZVector.m in Sources */ = {isa = PBXBuildFile; fileRef = BA73302421DF607D00CE1725 /* TZVector.m */; };
 		BA73302B21DF634B00CE1725 /* TZRichTextController.m in Sources */ = {isa = PBXBuildFile; fileRef = BA73302921DF634B00CE1725 /* TZRichTextController.m */; };
-		BA73302C21DF634B00CE1725 /* TZRichTextController.m in Sources */ = {isa = PBXBuildFile; fileRef = BA73302921DF634B00CE1725 /* TZRichTextController.m */; };
 		BA73302D21DF634B00CE1725 /* TZRichTextController.h in Headers */ = {isa = PBXBuildFile; fileRef = BA73302A21DF634B00CE1725 /* TZRichTextController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		BA73302E21DF634B00CE1725 /* TZRichTextController.h in Headers */ = {isa = PBXBuildFile; fileRef = BA73302A21DF634B00CE1725 /* TZRichTextController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		BA73302F21DF638200CE1725 /* TZKit_Fondation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BA732FB021DF596000CE1725 /* TZKit_Fondation.framework */; };
@@ -464,7 +463,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				BA0A53EA21EDCCE7001B0293 /* TZRuntimeExtension.m in Sources */,
-				BA73302C21DF634B00CE1725 /* TZRichTextController.m in Sources */,
 				BA0A53EB21EDCCEE001B0293 /* TZVector.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

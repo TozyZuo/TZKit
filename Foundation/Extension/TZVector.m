@@ -987,12 +987,12 @@ TZIgnoreWarningEnd
 
         SEL selector = NSSelectorFromString(sel);
 
-        if (class_respondsToSelector(vectorClass, selector)) {
+//        if (class_respondsToSelector(vectorClass, selector)) {
 
             Method method = class_getInstanceMethod(vectorClass, selector);
 
             TZVectorCheckAssert(class_addMethod(vectorClass, selector, class_getMethodImplementation(TZVectorStub.class, selector), method_getTypeEncoding(method)));
-        }
+//        }
     }
 
     [TZVectorStub.cachedVectorClasses addObject:vectorClass];

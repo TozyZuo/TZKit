@@ -22,11 +22,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property (readonly) NSFont *font;
 @property (readonly) NSLineBreakMode lineBreakMode;
 @property (getter=isSelectable) BOOL selectable;
+- (nullable NSArray<NSValue *> *)rectsForStringRange:(NSRange)range;
 @optional
 @property (readonly) CGFloat lineSpacing;
 @property (readonly) CGFloat extraLineSpacing; // for calculating tracking area
 @property (readonly) NSEdgeInsets textInsets;
-- (nullable NSArray<NSValue *> *)rectsForCharacterRange:(NSRange)range;
 @end
 
 
