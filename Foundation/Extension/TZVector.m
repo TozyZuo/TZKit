@@ -5,6 +5,7 @@
 //
 
 #import "TZVector.h"
+#import "NSObject+TZCategory.h"
 #import <objc/objc-runtime.h>
 #import "metamacros.h"
 
@@ -896,6 +897,7 @@ TZIgnoreWarningEnd
         [TZVectorType cleanClass:NSStringFromClass(object_getClass(vector)) outClass:&vectorClass outClassString:NULL];
 
         NSAssert([vector _isKVOA] || [TZVectorStub.supportedVectorClasses containsObject:vectorClass], @"TZVector: Not support for object %@", vector);
+        // support for KVO (custom vector) is not perfect
         NSAssert(![vector _isKVOA], @"TZVector: Not support for KVO object.");
 
         vectorClass = [self realVectorClassForVector:vector];
@@ -987,12 +989,11 @@ TZIgnoreWarningEnd
 
         SEL selector = NSSelectorFromString(sel);
 
-//        if (class_respondsToSelector(vectorClass, selector)) {
+        TZVectorCheckAssert(![vectorClass instancesImplementedSelector:selector]);
 
-            Method method = class_getInstanceMethod(vectorClass, selector);
+        Method method = class_getInstanceMethod(vectorClass, selector);
 
-            TZVectorCheckAssert(class_addMethod(vectorClass, selector, class_getMethodImplementation(TZVectorStub.class, selector), method_getTypeEncoding(method)));
-//        }
+        TZVectorCheckAssert(class_addMethod(vectorClass, selector, class_getMethodImplementation(TZVectorStub.class, selector), method_getTypeEncoding(method)));
     }
 
     [TZVectorStub.cachedVectorClasses addObject:vectorClass];

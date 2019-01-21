@@ -18,6 +18,7 @@ FOUNDATION_EXPORT const unsigned char TZKitVersionString[];
 
 
 #import <TZKit/FoundationMacros.h>
+#import <TZKit/NSObject+TZCategory.h>
 #import <TZKit/TZVector.h>
 
 #if TARGET_OS_WATCH
