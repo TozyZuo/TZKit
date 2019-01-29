@@ -50,20 +50,9 @@
 		BA83848B21F59E310047E3B8 /* NSObject+TZCategory.h in Headers */ = {isa = PBXBuildFile; fileRef = BA83848721F59E310047E3B8 /* NSObject+TZCategory.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		BA83848C21F59E310047E3B8 /* NSObject+TZCategory.h in Headers */ = {isa = PBXBuildFile; fileRef = BA83848721F59E310047E3B8 /* NSObject+TZCategory.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		BA83848D21F59E310047E3B8 /* NSObject+TZCategory.h in Headers */ = {isa = PBXBuildFile; fileRef = BA83848721F59E310047E3B8 /* NSObject+TZCategory.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		BAD1501D21E4A2DF00C43F0D /* TZKit_Fondation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BA732FB021DF596000CE1725 /* TZKit_Fondation.framework */; };
 		BAD1509F21E4A7F200C43F0D /* TZVector.m in Sources */ = {isa = PBXBuildFile; fileRef = BA73302421DF607D00CE1725 /* TZVector.m */; };
 		BAD150A121E4C4D200C43F0D /* Foundation_Log.m in Sources */ = {isa = PBXBuildFile; fileRef = BA732FF321DF5C5200CE1725 /* Foundation_Log.m */; };
 /* End PBXBuildFile section */
-
-/* Begin PBXContainerItemProxy section */
-		BA55743921E4988400ED9D11 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = BA732FA721DF596000CE1725 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = BA732FAF21DF596000CE1725;
-			remoteInfo = "TZKit-Foundation";
-		};
-/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		BA0A53E321EDCCE7001B0293 /* TZRuntimeExtension.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TZRuntimeExtension.h; sourceTree = "<group>"; };
@@ -105,7 +94,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BAD1501D21E4A2DF00C43F0D /* TZKit_Fondation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -356,7 +344,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				BA55743A21E4988400ED9D11 /* PBXTargetDependency */,
 			);
 			name = "TZKit-macOS";
 			productName = "TZKit-macOS";
@@ -484,14 +471,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		BA55743A21E4988400ED9D11 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = BA732FAF21DF596000CE1725 /* TZKit-Foundation */;
-			targetProxy = BA55743921E4988400ED9D11 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		BA732FB621DF596000CE1725 /* Debug */ = {

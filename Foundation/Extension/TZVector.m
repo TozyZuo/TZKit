@@ -19,7 +19,12 @@ metamacro_concat(TZInvokeSuperWithObject, metamacro_argcount(__VA_ARGS__))(objec
 #define TZInvokeSuperWithObject4(object, returnType, sel, type1, arg1, type2, arg2, ...)\
 ((returnType (*)(struct objc_super *, SEL, type1, type2))objc_msgSendSuper)(&(struct objc_super){object, class_getSuperclass(object_getClass(object))}, sel, arg1, arg2)
 
-#define TZVectorCheckAssert(condition) NSAssert((condition), @"handle this")
+#define TZVectorCheckAssertResult metamacro_concat(TZVectorCheckAssertResult, __LINE__)
+
+#define TZVectorCheckAssert(condition)\
+__unused BOOL TZVectorCheckAssertResult = (condition);\
+NSAssert(TZVectorCheckAssertResult, @"handle this")
+
 #define TZVectorLog(...) NSLog(@"TZVector: %@", [NSString stringWithFormat:__VA_ARGS__])
 
 //static BOOL (*_TZKVOIsAutonotifying)(id self, SEL _cmd);
