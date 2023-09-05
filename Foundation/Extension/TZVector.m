@@ -5,9 +5,9 @@
 //
 
 #import "TZVector.h"
-#import "NSObject+TZCategory.h"
-#import <objc/objc-runtime.h>
 #import "metamacros.h"
+#import "NSObject+TZCategory.h"
+#import <objc/message.h>
 
 #define TZInvokeSuper(returnType, sel, ...) TZInvokeSuperWithObject(self, returnType, sel, __VA_ARGS__)
 #define TZInvokeSuperWithObject(object, returnType, sel, ...)\

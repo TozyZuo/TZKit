@@ -4,7 +4,7 @@
 //  Copyright © 2018年 TozyZuo. All rights reserved.
 //
 
-#import <Cocoa/Cocoa.h>
+#import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

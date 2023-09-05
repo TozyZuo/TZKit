@@ -6,7 +6,7 @@
 //  Copyright © 2019年 TozyZuo. All rights reserved.
 //
 
-#import <Cocoa/Cocoa.h>
+#import <Foundation/Foundation.h>
 
 //! Project version number for TZKit.
 FOUNDATION_EXPORT double TZKitVersionNumber;
@@ -20,10 +20,11 @@ FOUNDATION_EXPORT const unsigned char TZKitVersionString[];
 #import <TZKit/FoundationMacros.h>
 #import <TZKit/NSObject+TZCategory.h>
 #import <TZKit/TZVector.h>
+#import <TZKit/TZConfig.h>
 
 #if TARGET_OS_WATCH
 #elif TARGET_OS_IOS
-    #import <TZKit/TZRichTextController.h>
+//    #import <TZKit/TZRichTextController.h>
 #elif TARGET_OS_MAC
     #import <TZKit/NSView+TZCategory.h>
     #import <TZKit/NSTextView+TZCategory.h>
