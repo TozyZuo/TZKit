@@ -202,7 +202,7 @@ typedef NS_ENUM(NSInteger, TZVectorTypeDetailType) {
     buf[0] = lo;
     buf[size - 1] = '\0';
 
-    self[[NSString stringWithUTF8String:buf]] = value;
+    self[@(buf)] = value;
 }
 
 @end
